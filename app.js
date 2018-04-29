@@ -6,57 +6,67 @@ mongoose.connect('mongodb://localhost/digimondb')
 const database = require('./utils/database')
 
 /* REPOSITORY */
-const repository = require('./repository/repository')
+const insertRepository = require('./repository/insert.repository')
+const updateRepository = require('./repository/update.repository')
 
 /* SCRAPING */
 const pageScraping = require('./scraping/get-all-pages')
-const tableOfContent = require('./scraping/table-of-content')
-const eggsBabies = require('./scraping/egg-babies')
-const everyoneElse = require('./scraping/everyone-else')
+const scrapingTableOfContent = require('./scraping/table-of-content')
+const scrapingEggsBabies = require('./scraping/egg-babies')
+const scrapingEveryoneElse = require('./scraping/everyone-else')
 
-
-digimonScrapingData = []
+digimonIndexList = []
 
 const getPagesPromise = pageScraping.getAllPages()
-//const cleanDatabsePromise = database.removeAllDigimon()
+const cleanDatabsePromise = database.removeAllDigimon()
 
-
-
-Promise.all([getPagesPromise /*cleanDatabsePromise*/ ])
+Promise.all([getPagesPromise, cleanDatabsePromise])
     .then(result => {
-        const [pages /*,resultDB*/ ] = result
 
-        tableOfContent.scraping(pages[0])
-            .then(digimonData => {
-                digimonScrapingData = digimonData
+        const [pages, resultDB] = result
 
-                //     return repository.saveAll(digimonData)
-                // })
-                // .then(result => {
+        scrapingTableOfContent.getIndex(pages[0])
+            .then(result => {
 
-                return eggsBabies.scraping(pages[0])
+                digimonIndexList = result /* {phase, phaseTo, name, page} */
+
+                return insertRepository.saveAll(digimonIndexList)
             })
-            .then(digimonList => {
+            .then(result => {
 
-                return everyoneElse.scraping(digimonList, digimonScrapingData, pages)
-            })
-            .then(digimonList => {
-                console.log(digimonList)
-                mongoose.connection.close()
-                //digimonList.map(digimon => console.log(digimon.name))
-                //return repository.relationAll(digimonList)
-            })
-            // .then(result => {
+                console.log(result)
 
-            //     mongoose.connection.close()
-            // })
+                return scrapingEggsBabies.get(pages[0])
+            })
+            .then(result => {
+
+                const [digimonEvolvesFromList, digimonEvolvesToList] = result
+                /** {phase,digimon,evolvesFrom,statsEvolvesFrom} - {phase,digimon,evolvesTo,statsEvolvesTo} */
+
+                return scrapingEveryoneElse.get(digimonEvolvesFromList, digimonEvolvesToList, digimonIndexList, pages)
+            })
+            .then(result => {
+                // console.log(result)
+                const [digimonEvolvesFromList, digimonEvolvesToList] = result
+
+                return updateRepository.setEvolvesTo(digimonEvolvesToList)
+            })
+            .then(result => {
+                console.log(result)
+
+                return updateRepository.setEvolvesFrom(digimonEvolvesFromList)
+            })
+            .then(result => {
+                console.log(result)
+            })
             .catch(err => {
                 console.log(err)
             })
     })
-
+    .then(result => {
+        mongoose.connection.close()
+    })
     .catch(err => {
-
         console.log(err)
         mongoose.connection.close()
     })

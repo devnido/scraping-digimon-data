@@ -1,7 +1,7 @@
 const cheerio = require('cheerio')
 
 toExport = {
-    scraping: (page) => {
+    getIndex: (page) => {
         return new Promise((resolve, reject) => {
             let digimonList = []
             getEggsAndBabies(digimonList, page)
@@ -92,7 +92,7 @@ const getEveryoneElse = (digimonList, page) => {
                         phase: phase.trim(),
                         phaseTo: phaseTo.trim(),
                         name: name,
-                        page: page /* ?page=0#Koromon */
+                        page: page /* 0 */
                     })
                 })
             })

@@ -1,9 +1,10 @@
 const cheerio = require('cheerio')
 
-const digimonList = []
+const digimonEvolvesFromList = []
+const digimonEvolvesToList = []
 
 const scraping = {
-    scraping: (page) => {
+    get: (page) => {
 
         return new Promise((resolve, reject) => {
 
@@ -20,22 +21,35 @@ const scraping = {
                     const _baby = $(o).find('td:nth-child(2)').html()
                     const _inTrainig = $(o).find('td:nth-child(3)').text()
 
-                    digimonList.push({
+                    digimonEvolvesToList.push({
                         phase: 'Egg',
-                        name: _egg,
+                        digimon: _egg,
                         evolvesTo: _baby
                     })
-                    digimonList.push({
-                        phase: 'Baby',
-                        name: _baby,
-                        evolvesFrom: _egg,
-                        evolvesTo: _inTrainig
 
+                    digimonEvolvesFromList.push({
+                        phase: 'Baby',
+                        digimon: _baby,
+                        evolvesFrom: _egg
                     })
+
+                    digimonEvolvesToList.push({
+                        phase: 'Baby',
+                        digimon: _baby,
+                        evolvesTo: _inTrainig
+                    })
+
+                    digimonEvolvesFromList.push({
+                        phase: 'In Training',
+                        digimon: _inTrainig,
+                        evolvesFrom: _baby
+                    })
+
+
 
                 });
 
-                resolve(digimonList)
+                resolve([digimonEvolvesFromList, digimonEvolvesToList])
             } else {
                 reject({
                     ok: 0,

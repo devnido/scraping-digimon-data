@@ -5,9 +5,6 @@ const proxies = require('../utils/proxies').get()
 const URL = 'https://gamefaqs.gamespot.com/ps4/196176-digimon-world-next-order/faqs/74424'
 const PAGE = '?page='
 
-
-
-
 function requestPage(i) {
     return new Promise((resolve, reject) => {
         request({

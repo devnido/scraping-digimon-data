@@ -6,123 +6,109 @@ const Champion = require('../models/champion.model')
 const Ultimate = require('../models/ultimate.model')
 const Mega = require('../models/mega.model')
 
+
+
 const scraping = {
 
-    scraping: (digimonList, digimonScrapingData, pages) => {
+    get: (digimonEvolvesFromList, digimonEvolvesToList, digimonIndexList, pages) => {
         return new Promise((resolve, reject) => {
 
-            const digimonWithoutEggsAndBabies = digimonScrapingData.filter(pullEggsAndBabies)
-            // for (let i = 0; i < 4; i++) {
+            const digimonWithoutEggsAndBabies = digimonIndexList.filter(pullEggsAndBabies)
 
-            const digimonThisPage = digimonWithoutEggsAndBabies.filter(digimon => digimon.page == 0)
+            for (let i = 0; i < 4; i++) {
 
-            const $ = cheerio.load(pages[0])
+                const digimonsInThisPage = digimonWithoutEggsAndBabies.filter(digimon => digimon.page == i)
 
-            if (digimonThisPage.length > 0) {
+                const $ = cheerio.load(pages[i])
 
-                let count = digimonThisPage.length
+                if (digimonsInThisPage.length > 0) { /** {phase, phaseTo, name, page} */
 
-                for (digimon of digimonThisPage) {
+                    let count = digimonsInThisPage.length
 
-                    /* Datos digimon */
-                    const name = digimon.name
-                    const phase = digimon.phase
-                    const evolvesFrom = []
-                    const evolvesTo = []
+                    for (digimon of digimonsInThisPage) {
+
+                        /** Datos digimon */
+                        const name = digimon.name
+                        const phase = digimon.phase
+                        const phaseTo = digimon.phaseTo
 
 
-                    /* Busqueda con selector */
-                    /* selector id digimon */
-                    const idSelector = 'a[id="' + digimon.name + '"]'
+                        /** Busqueda con selector */
+                        /** selector id digimon   */
+                        const idSelector = 'a[id="' + name + '"]'
 
-                    if (phase != 'Mega') {
+                        if (phase != 'Mega') {
 
-                        /** evolvesTo table*/
-                        let tableRowsEvolvesTo = $(idSelector).parent().next().find('tbody > tr')
+                            /** evolvesTo table*/
+                            let tableRowsEvolvesTo = $(idSelector).parent().next().find('tbody > tr')
 
-                        /** evolvesTo each row without titles*/
-                        tableRowsEvolvesTo.each(function (i, o) {
-                            if (i > 0) {
+                            /** evolvesTo each row without titles*/
+                            tableRowsEvolvesTo.each(function (i, o) {
+                                if (i > 0) {
 
-                                const td = $(this).find('td')
+                                    const td = $(this).find('td')
 
-                                const nameEvolvesTo = $(td[0]).text()
-                                const statsEvolvesTo = {
-                                    hp: $(td[1]).text(),
-                                    mp: $(td[2]).text(),
-                                    strength: $(td[3]).text(),
-                                    stamina: $(td[4]).text(),
-                                    wisdom: $(td[5]).text(),
-                                    speed: $(td[6]).text(),
-                                    weight: $(td[7]).text(),
-                                    mistakes: $(td[8]).text(),
-                                    bond: $(td[9]).text(),
-                                    discipline: $(td[10]).text(),
-                                    wins: $(td[11]).text(),
-                                    keyDigimon: $(td[12]).text(),
-                                    keyPoints: $(td[13]).text(),
+                                    let nameEvolvesTo = $(td[0]).text()
+
+                                    if (nameEvolvesTo.indexOf('*')) {
+                                        nameEvolvesTo = nameEvolvesTo.replace('*', '')
+                                    }
+
+                                    const statsEvolvesTo = {
+                                        hp: $(td[1]).text(),
+                                        mp: $(td[2]).text(),
+                                        strength: $(td[3]).text(),
+                                        stamina: $(td[4]).text(),
+                                        wisdom: $(td[5]).text(),
+                                        speed: $(td[6]).text(),
+                                        weight: $(td[7]).text(),
+                                        mistakes: $(td[8]).text(),
+                                        bond: $(td[9]).text(),
+                                        discipline: $(td[10]).text(),
+                                        wins: $(td[11]).text(),
+                                        keyDigimon: $(td[12]).text(),
+                                        keyPoints: $(td[13]).text(),
+                                    }
+
+                                    digimonEvolvesToList.push({
+                                        phase: phase,
+                                        digimon: name,
+                                        evolvesTo: nameEvolvesTo,
+                                        statsTo: statsEvolvesTo
+                                    })
+
+                                    digimonEvolvesFromList.push({
+                                        phase: phaseTo,
+                                        digimon: nameEvolvesTo,
+                                        evolvesFrom: name,
+                                        statsFrom: statsEvolvesTo
+                                    })
+
                                 }
 
-                                evolvesTo.push({
-                                    name: nameEvolvesTo,
-                                    stats: statsEvolvesTo
-                                })
-                            }
-                        }) //end each evolvesTo
 
 
 
-                        let tableRowsEvolvesFrom = $(idSelector).parent().next().next().find('tbody > tr')
-
-                        tableRowsEvolvesFrom.each(function (i, o) {
-
-                            const td = $(this).find('td')
-
-                            if (i == 0) {
-
-                                const nameEvolvesFrom = $(td[1]).text()
-                                evolvesFrom.push(nameEvolvesFrom)
-                            } else {
-                                const nameEvolvesFrom = $(td[0]).text()
-                                evolvesFrom.push(nameEvolvesFrom)
-                            }
-
-                        })
+                            }) //end each evolvesTo
 
 
 
+                        } //end if !mega
 
 
 
-
-
-
-                    } else {
-
-                    }
-
-
-
-
-
-
-
-
-                    if (count--) {
-                        resolve('asdasdasdsa')
-                    }
+                    } //end for of digimons pages
+                } else {
+                    reject('No hay elementos')
                 }
 
 
-            } else {
-                reject('No hay elementos')
+                if (i === 3) {
+                    resolve([digimonEvolvesFromList, digimonEvolvesToList])
+                }
+
+
             }
-
-
-            // if (i === 3) {
-            //     resolve(digimonList)
-            // }
-            // }
         })
     }
 }

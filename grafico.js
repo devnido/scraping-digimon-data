@@ -6,7 +6,7 @@ const [x3, y3] = [4, 4]
 
 const [x4, y4] = [2, 2]
 
-const MAX = 10
+const SIZE = 10
 
 const DOT = ' \x1b[34m*\x1b[0m '
 const VOID = ' - '
@@ -16,8 +16,8 @@ let row = ''
 let col = ''
 let firstRow = ' \x1b[32m0\x1b[0m '
 
-for (let i = 0; i <= MAX; i++) {
-    for (let j = 0; j <= MAX; j++) {
+for (let i = 0; i <= SIZE; i++) {
+    for (let j = 0; j <= SIZE; j++) {
 
         if (x1 == j && y1 == i) {
             print = DOT
