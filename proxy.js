@@ -5,7 +5,7 @@ const cheerio = require('cheerio')
 const URL = 'https://gamefaqs.gamespot.com/ps4/196176-digimon-world-next-order/faqs/74424'
 const PAGE = '?page=0'
 
-const proxies = ['http://52.229.52.86:3128', 'http://52.164.249.198:3128', 'http://145.249.106.107:8118', 'http://104.46.34.250:3128']
+const proxies = ['http://181.215.238.184:8080', 'http://45.76.26.59:8080', 'http://104.238.162.138:8080', 'http://206.189.192.206:3128']
 
 
 async function getRequest(proxy) {

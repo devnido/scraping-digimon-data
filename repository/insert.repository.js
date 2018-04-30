@@ -1,5 +1,3 @@
-const mongoose = require('mongoose')
-
 const Egg = require('../models/egg.model')
 const Baby = require('../models/baby.model')
 const InTraining = require('../models/in-training.model')
@@ -8,121 +6,135 @@ const Champion = require('../models/champion.model')
 const Ultimate = require('../models/ultimate.model')
 const Mega = require('../models/mega.model')
 
-const repository = {
-    saveAll: async (digimonList) => {
+function saveDigimon(digimon) {
+    return new Promise((resolve, reject) => {
 
-        return await loopDigimon(digimonList)
+        const phase = digimon.phase
 
-        async function loopDigimon(digimonList) {
+        switch (phase) {
+            case 'Egg':
+                egg = new Egg({
+                    name: digimon.name
+                })
 
-            for (const digimon of digimonList) {
-                await saveDigimon(digimon)
-            }
+                egg.save()
+                    .then(egg => {
+                        resolve(egg)
+                    })
+                    .catch(err => {
+                        reject(err)
+                    })
+                break;
+            case 'Baby':
+                baby = new Baby({
+                    name: digimon.name
+                })
+
+                baby.save()
+                    .then(baby => {
+                        resolve(baby)
+                    })
+                    .catch(err => {
+                        reject(err)
+                    })
+                break;
+            case 'In Training':
+                inTraining = new InTraining({
+                    name: digimon.name
+                })
+
+                inTraining.save()
+                    .then(inTraining => {
+                        resolve(inTraining)
+                    })
+                    .catch(err => {
+                        reject(err)
+                    })
+                break;
+            case 'Rookie':
+                rookie = new Rookie({
+                    name: digimon.name
+                })
+
+                rookie.save()
+                    .then(rookie => {
+                        resolve(rookie)
+                    })
+                    .catch(err => {
+                        reject(err)
+                    })
+                break;
+            case 'Champion':
+                champion = new Champion({
+                    name: digimon.name
+                })
+
+                champion.save()
+                    .then(champion => {
+                        resolve(champion)
+                    })
+                    .catch(err => {
+                        reject(err)
+                    })
+                break;
+            case 'Ultimate':
+                ultimate = new Ultimate({
+                    name: digimon.name
+                })
+
+                ultimate.save()
+                    .then(ultimate => {
+                        resolve(ultimate)
+                    })
+                    .catch(err => {
+                        reject(err)
+                    })
+                break;
+            case 'Mega':
+                mega = new Mega({
+                    name: digimon.name
+                })
+
+                mega.save()
+                    .then(mega => {
+                        resolve(mega)
+                    })
+                    .catch(err => {
+                        reject(err)
+                    })
+                break;
         }
-
-        function saveDigimon(digimon) {
-            return new Promise((resolve, reject) => {
-
-                const phase = digimon.phase
-
-                switch (phase) {
-                    case 'Egg':
-                        egg = new Egg({
-                            name: digimon.name
-                        })
-
-                        egg.save()
-                            .then(egg => {
-                                resolve(egg)
-                            })
-                            .catch(err => {
-                                reject(err)
-                            })
-                        break;
-                    case 'Baby':
-                        baby = new Baby({
-                            name: digimon.name
-                        })
-
-                        baby.save()
-                            .then(baby => {
-                                resolve(baby)
-                            })
-                            .catch(err => {
-                                reject(err)
-                            })
-                        break;
-                    case 'In Training':
-                        inTraining = new InTraining({
-                            name: digimon.name
-                        })
-
-                        inTraining.save()
-                            .then(inTraining => {
-                                resolve(inTraining)
-                            })
-                            .catch(err => {
-                                reject(err)
-                            })
-                        break;
-                    case 'Rookie':
-                        rookie = new Rookie({
-                            name: digimon.name
-                        })
-
-                        rookie.save()
-                            .then(rookie => {
-                                resolve(rookie)
-                            })
-                            .catch(err => {
-                                reject(err)
-                            })
-                        break;
-                    case 'Champion':
-                        champion = new Champion({
-                            name: digimon.name
-                        })
-
-                        champion.save()
-                            .then(champion => {
-                                resolve(champion)
-                            })
-                            .catch(err => {
-                                reject(err)
-                            })
-                        break;
-                    case 'Ultimate':
-                        ultimate = new Ultimate({
-                            name: digimon.name
-                        })
-
-                        ultimate.save()
-                            .then(ultimate => {
-                                resolve(ultimate)
-                            })
-                            .catch(err => {
-                                reject(err)
-                            })
-                        break;
-                    case 'Mega':
-                        mega = new Mega({
-                            name: digimon.name
-                        })
-
-                        mega.save()
-                            .then(mega => {
-                                resolve(mega)
-                            })
-                            .catch(err => {
-                                reject(err)
-                            })
-                        break;
-                }
-            })
-
-        }
-    }
+    })
 
 }
+
+async function processArray(array) {
+    for (const digimon of array) {
+        await saveDigimon(digimon)
+
+    }
+}
+
+
+
+const repository = {
+    saveAll: (digimonList) => {
+        return new Promise((resolve, reject) => {
+
+            let count = digimonList.length
+
+            processArray(digimonList).then(result => {
+                console.log(result)
+                resolve(result)
+            })
+        })
+
+
+
+
+    }
+}
+
+
 
 module.exports = repository

@@ -30,7 +30,7 @@ Promise.all([getPagesPromise, cleanDatabsePromise])
 
                 digimonIndexList = result /* {phase, phaseTo, name, page} */
 
-                return insertRepository.saveAll(digimonIndexList)
+                return insertRepository.saveAll(result)
             })
             .then(result => {
 
@@ -52,19 +52,16 @@ Promise.all([getPagesPromise, cleanDatabsePromise])
                 return updateRepository.setEvolvesTo(digimonEvolvesToList)
             })
             .then(result => {
-                console.log(result)
+
 
                 return updateRepository.setEvolvesFrom(digimonEvolvesFromList)
             })
             .then(result => {
-                console.log(result)
+
             })
             .catch(err => {
                 console.log(err)
             })
-    })
-    .then(result => {
-        mongoose.connection.close()
     })
     .catch(err => {
         console.log(err)
