@@ -15,7 +15,11 @@ const scrapingTableOfContent = require('./scraping/table-of-content')
 const scrapingEggsBabies = require('./scraping/egg-babies')
 const scrapingEveryoneElse = require('./scraping/everyone-else')
 
-digimonIndexList = []
+let digimonIndexList = []
+
+let digimonEvolvesFromList = []
+let digimonEvolvesToList = []
+
 
 const getPagesPromise = pageScraping.getAllPages()
 const cleanDatabsePromise = database.removeAllDigimon()
@@ -40,24 +44,25 @@ Promise.all([getPagesPromise, cleanDatabsePromise])
             })
             .then(result => {
 
-                const [digimonEvolvesFromList, digimonEvolvesToList] = result
+                [digimonEvolvesFromList, digimonEvolvesToList] = result
                 /** {phase,digimon,evolvesFrom,statsEvolvesFrom} - {phase,digimon,evolvesTo,statsEvolvesTo} */
 
                 return scrapingEveryoneElse.get(digimonEvolvesFromList, digimonEvolvesToList, digimonIndexList, pages)
             })
             .then(result => {
                 // console.log(result)
-                const [digimonEvolvesFromList, digimonEvolvesToList] = result
+                [digimonEvolvesFromList, digimonEvolvesToList] = result
 
                 return updateRepository.setEvolvesTo(digimonEvolvesToList)
             })
             .then(result => {
-
+                console.log(result)
 
                 return updateRepository.setEvolvesFrom(digimonEvolvesFromList)
             })
             .then(result => {
-
+                console.log(result)
+                mongoose.connection.close()
             })
             .catch(err => {
                 console.log(err)

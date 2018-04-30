@@ -13,6 +13,7 @@ const repository = {
 
             return 'Digimon set evolves from'
         } catch (error) {
+            console.log(error.stack)
             throw new Error(error.message)
         }
 
@@ -63,6 +64,7 @@ const repository = {
             }
             return 'Digimons set evolves to'
         } catch (error) {
+            console.log(error.stack)
             throw new Error(error.message)
         }
 

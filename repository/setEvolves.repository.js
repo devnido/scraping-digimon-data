@@ -165,26 +165,35 @@ const repository = {
         return new Promise((resolve, reject) => {
 
             const rookiePromise = findRepository.findRookie(name)
-            const championPromise = findRepository.findChampion(evolvesToChampion)
 
-            Promise.all([rookiePromise, championPromise])
-                .then(result => {
 
-                    const [rookie, champion] = result
+            if (evolvesToChampion !== "Arresterdramon" && evolvesToChampion !== "OmniShoutmon") {
+                const championPromise = findRepository.findChampion(evolvesToChampion)
 
-                    rookie.evolvesTo.push({
-                        digimon: champion._id,
-                        stats: statsToChampion
+                Promise.all([rookiePromise, championPromise])
+                    .then(result => {
+
+                        const [rookie, champion] = result
+
+                        rookie.evolvesTo.push({
+                            digimon: champion._id,
+                            stats: statsToChampion
+                        })
+
+                        return rookie.save()
+                    })
+                    .then(result => {
+                        resolve(result)
+                    })
+                    .catch(err => {
+                        reject(err)
                     })
 
-                    return rookie.save()
-                })
-                .then(result => {
-                    resolve(result)
-                })
-                .catch(err => {
-                    reject(err)
-                })
+            } else {
+
+                resolve('Digimon doesnt exist')
+            }
+
         })
 
     },
@@ -192,16 +201,48 @@ const repository = {
         return new Promise((resolve, reject) => {
 
             const rookiePromise = findRepository.findRookie(evolvesFromRookie)
-            const championPromise = findRepository.findChampion(name)
 
-            Promise.all([rookiePromise, championPromise])
+            if (name !== "Arresterdramon" && name !== "OmniShoutmon") {
+                const championPromise = findRepository.findChampion(name)
+
+                Promise.all([rookiePromise, championPromise])
+                    .then(result => {
+
+                        const [rookie, champion] = result
+
+                        champion.evolvesFrom.push({
+                            digimon: rookie._id,
+                            stats: statsFromRookie
+                        })
+
+                        return champion.save()
+                    })
+                    .then(result => {
+                        resolve(result)
+                    })
+                    .catch(err => {
+                        reject(err)
+                    })
+
+            } else {
+                resolve("Digimon doesnt exist")
+            }
+        })
+    },
+    setChampionEvolvesTo: (name, evolvesToUltimate, statsToUltimate) => {
+        return new Promise((resolve, reject) => {
+
+            const championPromise = findRepository.findChampion(name)
+            const ultimatePromise = findRepository.findUltimate(evolvesToUltimate)
+
+            Promise.all([championPromise, ultimatePromise])
                 .then(result => {
 
-                    const [rookie, champion] = result
+                    const [champion, ultimate] = result
 
-                    champion.evolvesFrom.push({
-                        digimon: rookie._id,
-                        stats: statsFromRookie
+                    champion.evolvesTo.push({
+                        digimon: ultimate._id,
+                        stats: statsToUltimate
                     })
 
                     return champion.save()
@@ -212,10 +253,8 @@ const repository = {
                 .catch(err => {
                     reject(err)
                 })
-        })
-    },
-    setChampionEvolvesTo: (name, evolvesFromRookie, statsFromRookie, evolvesToUltimate, statsToUltimate) => {
 
+        })
     },
     setUltimateEvolvesFrom: (name, evolvesFromChampion, statsFromChampion) => {
         return new Promise((resolve, reject) => {
@@ -226,7 +265,7 @@ const repository = {
             Promise.all([championPromise, ultimatePromise])
                 .then(result => {
 
-                    const [champion, ultimate] = reuslt
+                    const [champion, ultimate] = result
 
                     ultimate.evolvesFrom.push({
                         digimon: champion._id,
@@ -251,7 +290,7 @@ const repository = {
             Promise.all([ultimatePromise, megaPromise])
                 .then(result => {
 
-                    const [ultimate, mega] = reuslt
+                    const [ultimate, mega] = result
 
                     ultimate.evolvesTo.push({
                         digimon: mega._id,

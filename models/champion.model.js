@@ -6,6 +6,7 @@ const champion = new Schema({
     name: String,
     image: String,
     evolvesTo: [{
+        _id: false,
         digimon: {
             type: Schema.Types.ObjectId,
             ref: 'Ultimate'
@@ -27,6 +28,7 @@ const champion = new Schema({
         }
     }],
     evolvesFrom: [{
+        _id: false,
         digimon: {
             type: Schema.Types.ObjectId,
             ref: 'Rookie'

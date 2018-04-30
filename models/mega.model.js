@@ -6,6 +6,7 @@ const mega = new Schema({
     name: String,
     image: String,
     evolvesFrom: [{
+        _id: false,
         digimon: {
             type: Schema.Types.ObjectId,
             ref: 'Ultimate'
