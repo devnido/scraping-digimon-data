@@ -109,10 +109,16 @@ function saveDigimon(digimon) {
 }
 
 async function processArray(array) {
-    for (const digimon of array) {
-        await saveDigimon(digimon)
+    try {
+        for (const digimon of array) {
+            await saveDigimon(digimon)
 
+        }
+        return 'All digimon added'
+    } catch (e) {
+        throw new Error(e.message)
     }
+
 }
 
 
@@ -121,12 +127,16 @@ const repository = {
     saveAll: (digimonList) => {
         return new Promise((resolve, reject) => {
 
-            let count = digimonList.length
 
-            processArray(digimonList).then(result => {
-                console.log(result)
-                resolve(result)
-            })
+
+            processArray(digimonList)
+                .then(result => {
+                    resolve(result)
+                })
+                .catch(err => {
+                    console.log(err)
+                    reject(err)
+                })
         })
 
 

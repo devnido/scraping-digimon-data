@@ -2,27 +2,19 @@ const setEvolvesRepository = require('./setEvolves.repository')
 
 const repository = {
 
-    setEvolvesFrom: (digimonList) => {
+    setEvolvesFrom: async (digimonList) => {
 
-        return new Promise((resolve, reject) => {
-            let count = digimonList.length
-
+        try {
             for (const digimon of digimonList) {
 
-                routeEvolvesFrom(digimon)
-                    .then(result => {
-                        if (!count--) {
-                            resolve('All digimons have been updated')
-                        }
-                    })
-                    .catch(err => {
-                        console.log(err)
-                    })
-
+                await routeEvolvesFrom(digimon)
 
             }
-        })
 
+            return 'Digimon set evolves from'
+        } catch (error) {
+            throw new Error(error.message)
+        }
 
         function routeEvolvesFrom({
             phase,
@@ -63,17 +55,18 @@ const repository = {
     setEvolvesTo: async (digimonList) => {
 
 
-        let count = digimonList.length
+        try {
+            for (const digimon of digimonList) {
 
-        for (const digimon of digimonList) {
+                await routeEvolvesTo(digimon)
 
-            const result = await routeEvolvesTo(digimon)
-
-
-            if (!count--) {
-                return 'All digimons have been updated'
             }
+            return 'Digimons set evolves to'
+        } catch (error) {
+            throw new Error(error.message)
         }
+
+
 
 
         function routeEvolvesTo({

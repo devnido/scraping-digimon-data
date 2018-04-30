@@ -61,6 +61,7 @@ Promise.all([getPagesPromise, cleanDatabsePromise])
             })
             .catch(err => {
                 console.log(err)
+                mongoose.connection.close()
             })
     })
     .catch(err => {
