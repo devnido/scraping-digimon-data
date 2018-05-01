@@ -6,7 +6,6 @@ const intraining = new Schema({
     name: String,
     image: String,
     evolvesTo: [{
-        _id: false,
         digimon: {
             type: Schema.Types.ObjectId,
             ref: 'Rookie'

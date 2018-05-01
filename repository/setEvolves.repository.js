@@ -24,7 +24,7 @@ const repository = {
 
                     const [egg, baby] = result
 
-                    egg.evolvesTo = baby._id
+                    egg.evolvesTo = baby
                     return egg.save()
 
                 })
@@ -47,7 +47,10 @@ const repository = {
                 .then(result => {
                     const [egg, baby] = result
 
-                    baby.evolvesFrom = egg._id
+                    baby.evolvesFrom = {
+                        phase: 'Egg',
+                        digimon: egg
+                    }
                     return baby.save()
 
                 })
@@ -70,7 +73,10 @@ const repository = {
 
                     const [baby, inTraining] = result
 
-                    baby.evolvesTo = inTraining._id
+                    baby.evolvesTo = {
+                        phase: 'InTraining',
+                        digimon: inTraining._id
+                    }
                     return baby.save()
 
                 })

@@ -6,13 +6,18 @@ const baby = new Schema({
     name: String,
     image: String,
     evolvesTo: {
-        type: Schema.Types.ObjectId,
-        ref: 'InTraining'
-
+        phase: String,
+        digimon: {
+            type: Schema.Types.ObjectId,
+            refPath: 'evolvesTo.phase'
+        }
     },
     evolvesFrom: {
-        type: Schema.Types.ObjectId,
-        ref: 'Egg'
+        phase: String,
+        digimon: {
+            type: Schema.Types.ObjectId,
+            refPath: 'evolvesFrom.phase'
+        }
     },
 });
 

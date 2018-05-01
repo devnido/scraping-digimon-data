@@ -24,6 +24,12 @@ let digimonEvolvesToList = []
 const getPagesPromise = pageScraping.getAllPages()
 const cleanDatabsePromise = database.removeAllDigimon()
 
+
+
+
+
+
+
 Promise.all([getPagesPromise, cleanDatabsePromise])
     .then(result => {
 

@@ -1,3 +1,4 @@
+const Baby = require('./baby.model')
 const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
