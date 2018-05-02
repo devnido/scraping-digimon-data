@@ -17,7 +17,7 @@ function requestPage(i) {
             },
             (err, resp, body) => {
                 if (!err && resp.statusCode == 200) {
-                    console.log('request', i)
+                    console.log('Request', i, proxies[i], 'success')
                     const $ = cheerio.load(body)
 
                     if ($('a[href="/ps4/196176-digimon-world-next-order"]').length > 0) {
@@ -25,19 +25,13 @@ function requestPage(i) {
 
                         resolve(body)
                     } else {
-                        reject({
-                            ok: 0,
-                            message: 'Bad request ' + i
-                        })
+                        reject('Bad request ' + i, proxies[i])
                     }
 
 
                 } else {
-                    reject({
-                        ok: 0,
-                        message: 'Bad request in get all pages ' + i,
-                        error: err
-                    })
+                    console.log('Request', i, proxies[i], 'failed')
+                    reject(err)
                 }
 
             })
@@ -55,11 +49,7 @@ const pages = {
                     resolve(results)
                 })
                 .catch(err => {
-                    reject({
-                        ok: 0,
-                        message: 'An error has ocurred in get all pages',
-                        error: err
-                    })
+                    reject(err)
                 })
         })
     }

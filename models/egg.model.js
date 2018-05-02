@@ -7,8 +7,11 @@ const egg = new Schema({
     name: String,
     image: String,
     evolvesTo: {
-        type: Schema.Types.ObjectId,
-        ref: 'Baby'
+        phase: String,
+        digimon: {
+            type: Schema.Types.ObjectId,
+            refPath: 'evolvesTo.phase'
+        }
     }
 });
 

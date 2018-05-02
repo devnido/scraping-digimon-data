@@ -18,18 +18,11 @@ const repository = {
                     if (egg) {
                         resolve(egg)
                     } else {
-                        reject({
-                            ok: 0,
-                            message: `egg ${name} doesn't exist`
-                        })
+                        reject(`egg ${name} doesn't exist`)
                     }
                 })
                 .catch(err => {
-                    reject({
-                        ok: 0,
-                        message: `An error has occurred`,
-                        error: err
-                    })
+                    reject(err)
                 })
         })
     },
@@ -43,18 +36,11 @@ const repository = {
                         resolve(baby)
                     } else {
 
-                        reject({
-                            ok: 0,
-                            message: `baby ${name} doesn't exist`
-                        })
+                        reject(`baby ${name} doesn't exist`)
                     }
                 })
                 .catch(err => {
-                    reject({
-                        ok: 0,
-                        message: `An error has occurred`,
-                        error: err
-                    })
+                    reject(err)
                 })
         })
 
@@ -68,18 +54,11 @@ const repository = {
                     if (inTraining) {
                         resolve(inTraining)
                     } else {
-                        reject({
-                            ok: 0,
-                            message: `In Training ${name} doesn't exist`
-                        })
+                        reject(`In Training ${name} doesn't exist`)
                     }
                 })
                 .catch(err => {
-                    reject({
-                        ok: 0,
-                        message: `An error has occurred`,
-                        error: err
-                    })
+                    reject(err)
                 })
         })
 
@@ -93,18 +72,11 @@ const repository = {
                     if (rookie) {
                         resolve(rookie)
                     } else {
-                        reject({
-                            ok: 0,
-                            message: `Rookie ${name} doesn't exist`
-                        })
+                        reject(`Rookie ${name} doesn't exist`)
                     }
                 })
                 .catch(err => {
-                    reject({
-                        ok: 0,
-                        message: `An error has occurred`,
-                        error: err
-                    })
+                    reject(err)
                 })
         })
     },
@@ -117,18 +89,11 @@ const repository = {
                     if (champion) {
                         resolve(champion)
                     } else {
-                        reject({
-                            ok: 0,
-                            message: `Champion ${name} doesn't exist`
-                        })
+                        reject(`Champion ${name} doesn't exist`)
                     }
                 })
                 .catch(err => {
-                    reject({
-                        ok: 0,
-                        message: `An error has occurred`,
-                        error: err
-                    })
+                    reject(err)
                 })
         })
     },
@@ -141,18 +106,11 @@ const repository = {
                     if (ultimate) {
                         resolve(ultimate)
                     } else {
-                        reject({
-                            ok: 0,
-                            message: `Ultimate ${name} doesn't exist`
-                        })
+                        reject(`Ultimate ${name} doesn't exist`)
                     }
                 })
                 .catch(err => {
-                    reject({
-                        ok: 0,
-                        message: `An error has occurred`,
-                        error: err
-                    })
+                    reject(err)
                 })
         })
 
@@ -166,18 +124,11 @@ const repository = {
                     if (mega) {
                         resolve(mega)
                     } else {
-                        reject({
-                            ok: 0,
-                            message: `Mega ${name} doesn't exist`
-                        })
+                        reject(`Mega ${name} doesn't exist`)
                     }
                 })
                 .catch(err => {
-                    reject({
-                        ok: 0,
-                        message: `An error has occurred`,
-                        error: err
-                    })
+                    reject(err)
                 })
         })
 

@@ -11,7 +11,7 @@ const repository = {
 
             }
 
-            return 'Digimon set evolves from'
+            return 'EvolvesFrom updated'
         } catch (error) {
             console.log(error.stack)
             throw new Error(error.message)
@@ -46,7 +46,7 @@ const repository = {
                     break;
                 default:
                     return new Promise(reject => {
-                        reject('Ha ocurrido un error ')
+                        reject('Phase doesnt exist')
                     })
                     break;
             }
@@ -62,10 +62,10 @@ const repository = {
                 await routeEvolvesTo(digimon)
 
             }
-            return 'Digimons set evolves to'
+            return 'EvolvesTo updated'
         } catch (error) {
-            console.log(error.stack)
-            throw new Error(error.message)
+            console.log(error)
+            throw Error(error)
         }
 
 
@@ -100,7 +100,7 @@ const repository = {
 
                 default:
                     return new Promise(reject => {
-                        reject('Ha ocurrido un error ')
+                        reject('Phase doesnt exist')
                     })
                     break;
             }

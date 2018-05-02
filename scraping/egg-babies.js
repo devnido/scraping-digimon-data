@@ -51,10 +51,7 @@ const scraping = {
 
                 resolve([digimonEvolvesFromList, digimonEvolvesToList])
             } else {
-                reject({
-                    ok: 0,
-                    message: 'No elements in egg babies scraping'
-                })
+                reject('No elements in egg babies scraping')
             }
         })
     }

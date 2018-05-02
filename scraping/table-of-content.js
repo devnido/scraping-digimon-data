@@ -59,10 +59,7 @@ const getEggsAndBabies = (digimonList, page) => {
             resolve(digimonList)
 
         } else {
-            reject({
-                ok: 0,
-                message: 'No elements in table of content get babies'
-            })
+            reject('No elements in table of content get babies')
         }
 
     })
@@ -100,10 +97,7 @@ const getEveryoneElse = (digimonList, page) => {
             resolve(digimonList)
 
         } else {
-            reject({
-                ok: 0,
-                message: 'No elements in table of content get everyone else'
-            })
+            reject('No elements in table of content get everyone else')
         }
     })
 }

@@ -6,9 +6,10 @@ const intraining = new Schema({
     name: String,
     image: String,
     evolvesTo: [{
+        phase: String,
         digimon: {
             type: Schema.Types.ObjectId,
-            ref: 'Rookie'
+            refPath: 'evolvesTo.phase'
         },
         stats: {
             hp: String,
@@ -27,8 +28,11 @@ const intraining = new Schema({
         }
     }],
     evolvesFrom: {
-        type: Schema.Types.ObjectId,
-        ref: 'Baby'
+        phase: String,
+        digimon: {
+            type: Schema.Types.ObjectId,
+            refPath: 'evolvesFrom.phase'
+        }
     }
 });
 

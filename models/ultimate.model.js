@@ -6,9 +6,10 @@ const ultimate = new Schema({
     name: String,
     image: String,
     evolvesTo: [{
+        phase: String,
         digimon: {
             type: Schema.Types.ObjectId,
-            ref: 'Mega'
+            refPath: 'evolvesTo.phase'
         },
         stats: {
             hp: String,
@@ -27,9 +28,10 @@ const ultimate = new Schema({
         }
     }],
     evolvesFrom: [{
+        phase: String,
         digimon: {
             type: Schema.Types.ObjectId,
-            ref: 'Champion'
+            refPath: 'evolvesFrom.phase'
         },
         stats: {
             hp: String,

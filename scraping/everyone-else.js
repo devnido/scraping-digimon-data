@@ -99,7 +99,7 @@ const scraping = {
 
                     } //end for of digimons pages
                 } else {
-                    reject('No hay elementos')
+                    reject('No elements in everyone else scraping')
                 }
 
 

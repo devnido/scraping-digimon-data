@@ -112,9 +112,8 @@ async function processArray(array) {
     try {
         for (const digimon of array) {
             await saveDigimon(digimon)
-
         }
-        return 'All digimon added'
+        return 'All digimons saved'
     } catch (e) {
         throw new Error(e.message)
     }
@@ -126,15 +125,11 @@ async function processArray(array) {
 const repository = {
     saveAll: (digimonList) => {
         return new Promise((resolve, reject) => {
-
-
-
             processArray(digimonList)
                 .then(result => {
                     resolve(result)
                 })
                 .catch(err => {
-                    console.log(err)
                     reject(err)
                 })
         })

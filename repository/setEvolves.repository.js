@@ -24,7 +24,10 @@ const repository = {
 
                     const [egg, baby] = result
 
-                    egg.evolvesTo = baby
+                    egg.evolvesTo = {
+                        phase: 'Baby',
+                        digimon: baby
+                    }
                     return egg.save()
 
                 })
@@ -75,7 +78,7 @@ const repository = {
 
                     baby.evolvesTo = {
                         phase: 'InTraining',
-                        digimon: inTraining._id
+                        digimon: inTraining
                     }
                     return baby.save()
 
@@ -99,7 +102,10 @@ const repository = {
 
                     const [baby, inTraining] = result
 
-                    inTraining.evolvesFrom = baby._id
+                    inTraining.evolvesFrom = {
+                        phase: 'Baby',
+                        digimon: baby
+                    }
 
                     return inTraining.save()
                 })
@@ -125,7 +131,8 @@ const repository = {
                     const [rookie, inTraining] = result
 
                     inTraining.evolvesTo.push({
-                        digimon: rookie._id,
+                        phase: 'Rookie',
+                        digimon: rookie,
                         stats: statsToRookie
                     })
 
@@ -152,7 +159,8 @@ const repository = {
                     const [inTraining, rookie] = result
 
                     rookie.evolvesFrom.push({
-                        digimon: inTraining._id,
+                        phase: 'InTraining',
+                        digimon: inTraining,
                         stats: statsFromInTraining
                     })
 
@@ -173,16 +181,18 @@ const repository = {
             const rookiePromise = findRepository.findRookie(name)
 
 
-            if (evolvesToChampion !== "Arresterdramon" && evolvesToChampion !== "OmniShoutmon") {
-                const championPromise = findRepository.findChampion(evolvesToChampion)
+            if (evolvesToChampion == "Arresterdramon" || evolvesToChampion == "OmniShoutmon") {
 
-                Promise.all([rookiePromise, championPromise])
+                const megaPromise = findRepository.findMega(evolvesToChampion)
+
+                Promise.all([rookiePromise, megaPromise])
                     .then(result => {
 
-                        const [rookie, champion] = result
+                        const [rookie, mega] = result
 
                         rookie.evolvesTo.push({
-                            digimon: champion._id,
+                            phase: 'Mega',
+                            digimon: mega,
                             stats: statsToChampion
                         })
 
@@ -197,7 +207,27 @@ const repository = {
 
             } else {
 
-                resolve('Digimon doesnt exist')
+                const championPromise = findRepository.findChampion(evolvesToChampion)
+
+                Promise.all([rookiePromise, championPromise])
+                    .then(result => {
+
+                        const [rookie, champion] = result
+
+                        rookie.evolvesTo.push({
+                            phase: 'Champion',
+                            digimon: champion,
+                            stats: statsToChampion
+                        })
+
+                        return rookie.save()
+                    })
+                    .then(result => {
+                        resolve(result)
+                    })
+                    .catch(err => {
+                        reject(err)
+                    })
             }
 
         })
@@ -208,7 +238,30 @@ const repository = {
 
             const rookiePromise = findRepository.findRookie(evolvesFromRookie)
 
-            if (name !== "Arresterdramon" && name !== "OmniShoutmon") {
+            if (name === "Arresterdramon" || name === "OmniShoutmon") {
+                const megaPromise = findRepository.findMega(name)
+
+                Promise.all([rookiePromise, megaPromise])
+                    .then(result => {
+
+                        const [rookie, mega] = result
+
+                        mega.evolvesFrom.push({
+                            phase: 'Rookie',
+                            digimon: rookie,
+                            stats: statsFromRookie
+                        })
+
+                        return mega.save()
+                    })
+                    .then(result => {
+                        resolve(result)
+                    })
+                    .catch(err => {
+                        reject(err)
+                    })
+
+            } else {
                 const championPromise = findRepository.findChampion(name)
 
                 Promise.all([rookiePromise, championPromise])
@@ -217,7 +270,8 @@ const repository = {
                         const [rookie, champion] = result
 
                         champion.evolvesFrom.push({
-                            digimon: rookie._id,
+                            phase: 'Rookie',
+                            digimon: rookie,
                             stats: statsFromRookie
                         })
 
@@ -229,9 +283,6 @@ const repository = {
                     .catch(err => {
                         reject(err)
                     })
-
-            } else {
-                resolve("Digimon doesnt exist")
             }
         })
     },
@@ -247,7 +298,8 @@ const repository = {
                     const [champion, ultimate] = result
 
                     champion.evolvesTo.push({
-                        digimon: ultimate._id,
+                        phase: 'Ultimate',
+                        digimon: ultimate,
                         stats: statsToUltimate
                     })
 
@@ -274,7 +326,8 @@ const repository = {
                     const [champion, ultimate] = result
 
                     ultimate.evolvesFrom.push({
-                        digimon: champion._id,
+                        phase: 'Champion',
+                        digimon: champion,
                         stats: statsFromChampion
                     })
                     return ultimate.save()
@@ -299,7 +352,8 @@ const repository = {
                     const [ultimate, mega] = result
 
                     ultimate.evolvesTo.push({
-                        digimon: mega._id,
+                        phase: 'Mega',
+                        digimon: mega,
                         stats: statsToMega
                     })
                     return ultimate.save()
@@ -325,7 +379,8 @@ const repository = {
                     const [ultimate, mega] = result
 
                     mega.evolvesFrom.push({
-                        digimon: ultimate._id,
+                        phase: 'Ultimate',
+                        digimon: ultimate,
                         stats: statsFromUltimate
                     })
 
