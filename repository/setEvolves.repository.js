@@ -14,30 +14,15 @@ const findRepository = require('./find.repository')
 
 const repository = {
     setEggEvolvesTo: (name, evolvesToBaby) => {
-        return new Promise((resolve, reject) => {
 
-            const eggPromise = findRepository.findEgg(name)
-            const babyPromise = findRepository.findBaby(evolvesToBaby)
+        const [egg, baby] = await Promise.all([findRepository.findEgg(name), findRepository.findBaby(evolvesToBaby)])
 
-            Promise.all([eggPromise, babyPromise])
-                .then(result => {
+        egg.evolvesTo = {
+            phase: 'Baby',
+            digimon: baby
+        }
 
-                    const [egg, baby] = result
-
-                    egg.evolvesTo = {
-                        phase: 'Baby',
-                        digimon: baby
-                    }
-                    return egg.save()
-
-                })
-                .then(result => {
-                    resolve(result)
-                })
-                .catch(err => {
-                    reject(err)
-                })
-        })
+        return egg.save()
     },
     setBabyEvolvesFrom: (name, evolvesFromEgg) => {
 

@@ -9,130 +9,20 @@ const Ultimate = require('../models/ultimate.model')
 const Mega = require('../models/mega.model')
 
 const repository = {
-    findEgg: (name) => {
-        return new Promise((resolve, reject) => {
-            Egg.findOne({
-                    name: name
-                })
-                .then(egg => {
-                    if (egg) {
-                        resolve(egg)
-                    } else {
-                        reject(`egg ${name} doesn't exist`)
-                    }
-                })
-                .catch(err => {
-                    reject(err)
-                })
-        })
-    },
-    findBaby: (name) => {
-        return new Promise((resolve, reject) => {
-            Baby.findOne({
-                    name: name
-                })
-                .then(baby => {
-                    if (baby) {
-                        resolve(baby)
-                    } else {
 
-                        reject(`baby ${name} doesn't exist`)
-                    }
-                })
-                .catch(err => {
-                    reject(err)
-                })
-        })
+    findEgg: name => Egg.findOne({ name }),
 
-    },
-    findInTraining: (name) => {
-        return new Promise((resolve, reject) => {
-            InTraining.findOne({
-                    name: name
-                })
-                .then(inTraining => {
-                    if (inTraining) {
-                        resolve(inTraining)
-                    } else {
-                        reject(`In Training ${name} doesn't exist`)
-                    }
-                })
-                .catch(err => {
-                    reject(err)
-                })
-        })
+    findBaby: name => Baby.findOne({ name }),
 
-    },
-    findRookie: (name) => {
-        return new Promise((resolve, reject) => {
-            Rookie.findOne({
-                    name: name
-                })
-                .then(rookie => {
-                    if (rookie) {
-                        resolve(rookie)
-                    } else {
-                        reject(`Rookie ${name} doesn't exist`)
-                    }
-                })
-                .catch(err => {
-                    reject(err)
-                })
-        })
-    },
-    findChampion: (name) => {
-        return new Promise((resolve, reject) => {
-            Champion.findOne({
-                    name: name
-                })
-                .then(champion => {
-                    if (champion) {
-                        resolve(champion)
-                    } else {
-                        reject(`Champion ${name} doesn't exist`)
-                    }
-                })
-                .catch(err => {
-                    reject(err)
-                })
-        })
-    },
-    findUltimate: (name) => {
-        return new Promise((resolve, reject) => {
-            Ultimate.findOne({
-                    name: name
-                })
-                .then(ultimate => {
-                    if (ultimate) {
-                        resolve(ultimate)
-                    } else {
-                        reject(`Ultimate ${name} doesn't exist`)
-                    }
-                })
-                .catch(err => {
-                    reject(err)
-                })
-        })
+    findInTraining: name => InTraining.findOne({ name }),
 
-    },
-    findMega: (name) => {
-        return new Promise((resolve, reject) => {
-            Mega.findOne({
-                    name: name
-                })
-                .then(mega => {
-                    if (mega) {
-                        resolve(mega)
-                    } else {
-                        reject(`Mega ${name} doesn't exist`)
-                    }
-                })
-                .catch(err => {
-                    reject(err)
-                })
-        })
+    findRookie: name => Rookie.findOne({ name }),
 
-    },
+    findChampion: name => Champion.findOne({ name }),
+
+    findUltimate: name => Ultimate.findOne({ name }),
+
+    findMega: (name) => Mega.findOne({ name }),
 
 }
 
