@@ -13,7 +13,7 @@ const findRepository = require('./find.repository')
 /** setEvolvesFrom and setEvolvesTo */
 
 const repository = {
-    setEggEvolvesTo: (name, evolvesToBaby) => {
+    setEggEvolvesTo: async(name, evolvesToBaby) => {
 
         const [egg, baby] = await Promise.all([findRepository.findEgg(name), findRepository.findBaby(evolvesToBaby)])
 
@@ -24,198 +24,90 @@ const repository = {
 
         return egg.save()
     },
-    setBabyEvolvesFrom: (name, evolvesFromEgg) => {
+    setBabyEvolvesFrom: async(name, evolvesFromEgg) => {
 
-        return new Promise((resolve, reject) => {
+        const [egg, baby] = await Promise.all([findRepository.findEgg(evolvesFromEgg), findRepository.findBaby(name)])
 
-            const eggPromise = findRepository.findEgg(evolvesFromEgg)
-            const babyPromise = findRepository.findBaby(name)
+        baby.evolvesFrom = {
+            phase: 'Egg',
+            digimon: egg
+        }
 
-            Promise.all([eggPromise, babyPromise])
-                .then(result => {
-                    const [egg, baby] = result
-
-                    baby.evolvesFrom = {
-                        phase: 'Egg',
-                        digimon: egg
-                    }
-                    return baby.save()
-
-                })
-                .then(result => {
-                    resolve(result)
-                })
-                .catch(err => {
-                    reject(err)
-                })
-        })
+        return baby.save()
     },
-    setBabyEvolvesTo: (name, evolvesToInTrainig) => {
-        return new Promise((resolve, reject) => {
+    setBabyEvolvesTo: async(name, evolvesToInTrainig) => {
 
-            const babyPromise = findRepository.findBaby(name)
-            const inTrainingPromise = findRepository.findInTraining(evolvesToInTrainig)
+        const [baby, inTraining] = await Promise.all([findRepository.findBaby(name), findRepository.findInTraining(evolvesToInTrainig)])
 
-            Promise.all([babyPromise, inTrainingPromise])
-                .then(result => {
+        baby.evolvesTo = {
+            phase: 'InTraining',
+            digimon: inTraining
+        }
 
-                    const [baby, inTraining] = result
-
-                    baby.evolvesTo = {
-                        phase: 'InTraining',
-                        digimon: inTraining
-                    }
-                    return baby.save()
-
-                })
-                .then(result => {
-                    resolve(result)
-                })
-                .catch(err => {
-                    reject(err)
-                })
-        })
+        return baby.save()
     },
-    setInTrainingEvolvesFrom: (name, evolvesFromBaby) => {
-        return new Promise((resolve, reject) => {
+    setInTrainingEvolvesFrom: async(name, evolvesFromBaby) => {
 
-            const babyPromise = findRepository.findBaby(evolvesFromBaby)
-            const inTrainingPromise = findRepository.findInTraining(name)
+        const [baby, inTraining] = await Promise.all([findRepository.findBaby(evolvesFromBaby), findRepository.findInTraining(name)])
 
-            Promise.all([babyPromise, inTrainingPromise])
-                .then(result => {
+        inTraining.evolvesFrom = {
+            phase: 'Baby',
+            digimon: baby
+        }
 
-                    const [baby, inTraining] = result
-
-                    inTraining.evolvesFrom = {
-                        phase: 'Baby',
-                        digimon: baby
-                    }
-
-                    return inTraining.save()
-                })
-                .then(result => {
-                    resolve(result)
-                })
-                .catch(err => {
-                    reject(err)
-                })
-        })
-
+        return inTraining.save()
     },
-    setInTrainingEvolvesTo: (name, evolvesToRookie, statsToRookie) => {
+    setInTrainingEvolvesTo: async(name, evolvesToRookie, statsToRookie) => {
 
-        return new Promise((resolve, reject) => {
+        const [rookie, inTraining] = await Promise.all([findRepository.findInTraining(name), findRepository.findRookie(evolvesToRookie)])
 
-            const inTrainingPromise = findRepository.findInTraining(name)
-            const rookiePromise = findRepository.findRookie(evolvesToRookie)
-
-            Promise.all([rookiePromise, inTrainingPromise])
-                .then(result => {
-
-                    const [rookie, inTraining] = result
-
-                    inTraining.evolvesTo.push({
-                        phase: 'Rookie',
-                        digimon: rookie,
-                        stats: statsToRookie
-                    })
-
-                    return inTraining.save()
-                })
-                .then(result => {
-                    resolve(result)
-                })
-                .catch(err => {
-                    reject(err)
-                })
+        inTraining.evolvesTo.push({
+            phase: 'Rookie',
+            digimon: rookie,
+            stats: statsToRookie
         })
 
+        return inTraining.save()
     },
-    setRookieEvolvesFrom: (name, evolvesFromInTraining, statsFromInTraining) => {
-        return new Promise((resolve, reject) => {
+    setRookieEvolvesFrom: async(name, evolvesFromInTraining, statsFromInTraining) => {
 
-            const inTrainingPromise = findRepository.findInTraining(evolvesFromInTraining)
-            const rookiePromise = findRepository.findRookie(name)
+        const [inTraining, rookie] = await Promise.all([findRepository.findInTraining(evolvesFromInTraining), findRepository.findRookie(name)])
 
-            Promise.all([inTrainingPromise, rookiePromise])
-                .then(result => {
-
-                    const [inTraining, rookie] = result
-
-                    rookie.evolvesFrom.push({
-                        phase: 'InTraining',
-                        digimon: inTraining,
-                        stats: statsFromInTraining
-                    })
-
-                    return rookie.save()
-                })
-                .then(result => {
-                    resolve(result)
-                })
-                .catch(err => {
-                    reject(err)
-                })
+        rookie.evolvesFrom.push({
+            phase: 'InTraining',
+            digimon: inTraining,
+            stats: statsFromInTraining
         })
+
+        return rookie.save()
     },
-    setRookieEvolvesTo: (name, evolvesToChampion, statsToChampion) => {
+    setRookieEvolvesTo: async(name, evolvesToChampion, statsToChampion) => {
 
-        return new Promise((resolve, reject) => {
+        const rookiePromise = findRepository.findRookie(name)
 
-            const rookiePromise = findRepository.findRookie(name)
+        if (evolvesToChampion == "Arresterdramon" || evolvesToChampion == "OmniShoutmon") {
 
+            const [rookie, mega] = await Promise.all([findRepository.findRookie(name), findRepository.findMega(evolvesToChampion)])
 
-            if (evolvesToChampion == "Arresterdramon" || evolvesToChampion == "OmniShoutmon") {
+            rookie.evolvesTo.push({
+                phase: 'Mega',
+                digimon: mega,
+                stats: statsToChampion
+            })
 
-                const megaPromise = findRepository.findMega(evolvesToChampion)
+        } else {
 
-                Promise.all([rookiePromise, megaPromise])
-                    .then(result => {
+            const [rookie, champion] = await Promise.all([findRepository.findRookie(name), findRepository.findChampion(evolvesToChampion)])
 
-                        const [rookie, mega] = result
+            rookie.evolvesTo.push({
+                phase: 'Champion',
+                digimon: champion,
+                stats: statsToChampion
+            })
 
-                        rookie.evolvesTo.push({
-                            phase: 'Mega',
-                            digimon: mega,
-                            stats: statsToChampion
-                        })
+        }
 
-                        return rookie.save()
-                    })
-                    .then(result => {
-                        resolve(result)
-                    })
-                    .catch(err => {
-                        reject(err)
-                    })
-
-            } else {
-
-                const championPromise = findRepository.findChampion(evolvesToChampion)
-
-                Promise.all([rookiePromise, championPromise])
-                    .then(result => {
-
-                        const [rookie, champion] = result
-
-                        rookie.evolvesTo.push({
-                            phase: 'Champion',
-                            digimon: champion,
-                            stats: statsToChampion
-                        })
-
-                        return rookie.save()
-                    })
-                    .then(result => {
-                        resolve(result)
-                    })
-                    .catch(err => {
-                        reject(err)
-                    })
-            }
-
-        })
+        return rookie.save()
 
     },
     setChampionEvolvesFrom: (name, evolvesFromRookie, statsFromRookie) => {
